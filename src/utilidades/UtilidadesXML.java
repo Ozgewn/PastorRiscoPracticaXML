@@ -3,16 +3,20 @@ package utilidades;
 import entidades.Producto;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UtilidadesXML {
     /**
@@ -49,8 +53,7 @@ public class UtilidadesXML {
         doc.setXmlVersion("1.0");
         Element elProductos = doc.createElement("productos");
         doc.appendChild(elProductos);
-        Document docRelleno = generarEtiquetas(doc,elProductos,productos);
-        return  docRelleno;
+        return generarEtiquetas(doc,elProductos,productos);
     }
 
     /**
@@ -108,6 +111,36 @@ public class UtilidadesXML {
             StreamResult sr = new StreamResult(nombreFichero);
             transformer.transform(domSource, sr);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Cabecera: public static void imprimirXMLSAX(String nombreFichero)
+     *
+     * Descripcion: Este metodo se encarga de imprimir por consola el contenido de un xml utilizado SAX.
+     * Para ello utilizamos la clase HnadlerSAX para mostrarlo en forma de tabla.
+     *
+     * Precondiciones: Que el fichero exista y tenga contenidos
+     *
+     * Postcondiciones: Muestra por consola el contenido del xml
+     * @param nombreFichero String
+     */
+    public static void imprimirXMLSAX(String nombreFichero) {
+        HandlerSAX gestor;
+        XMLReader procesadorXML;
+        InputSource archivoXML;
+        try {
+            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            SAXParser parser = parserFactory.newSAXParser();
+            procesadorXML = parser.getXMLReader();
+            gestor = new HandlerSAX();
+            procesadorXML.setContentHandler(gestor);
+            archivoXML = new InputSource(nombreFichero);
+            procesadorXML.parse(archivoXML);
+        } catch (SAXException | ParserConfigurationException ex) {
+            Logger.getLogger(UtilidadesXML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

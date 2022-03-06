@@ -6,7 +6,7 @@ import utilidades.UtilidadesXML;
 import java.util.ArrayList;
 
 public class Main {
-    private static final String NOMBRE_FICHERO = "./papopepo.xml";
+    private static final String NOMBRE_FICHERO = "./productos.xml";
 
     private static ArrayList<Producto> generarLista(){
         ArrayList<Producto> productos = new ArrayList<>();
@@ -21,5 +21,6 @@ public class Main {
 
     public static void main(String[] args) {
         UtilidadesXML.exportarXML(NOMBRE_FICHERO,generarLista());
+        UtilidadesXML.imprimirXMLSAX(NOMBRE_FICHERO);
     }
 }
